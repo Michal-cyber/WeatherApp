@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Weather</title>
+		<link rel="stylesheet" href="css/weather.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="js/weather.js"></script>
+		<script src="canvas/canvasjs.min.js"></script>
+		<script src="canvas/jquery.canvasjs.min.js"></script>
+
+		<SCRIPT language=Javascript>
+
+		      // is it numeric?
+		     function isNumberKey(evt)
+		      {
+		         const charCode = (evt.which) ? evt.which : event.keyCode
+		         if (charCode > 31 && (charCode < 48 || charCode > 57))
+		            return false;
+		         return true;
+		      }
+
+		    // validates only numbers with in the range 0 to 10 is typed in
+			function limit(element)
+			{
+			    const max_chars = 10;
+
+			    if(element.value.length > max_chars) {
+			        element.value = element.value.substr(0, max_chars);
+			    }
+			}
+			//*ends - number range validation
+
+			//Calculate TEMPERATURE
+			 function convert(degree) {
+			  let x;
+			  	if (degree == "C") {
+			    	x = c.value * 9 / 5 + 32;
+			    	f.value = Math.round(x);
+			    }  else {
+			    	x = (f.value -32) * 5 / 9;
+					c.value = Math.round(x);
+			    }
+
+			  }
+			  //END calculate temperature
+
+			// Calculate Heat index formula
+			function HeatIndex(degree) {
+			  let x, heat;
+			  let c = document.getElementById("c"),
+				  rh = document.getElementById('rh'),
+				  f = document.getElementById("f"),
+				  heatFormula = document.getElementById("heatFormula");
+
+			  if (degree == "C") {
+			  	if (!rh.value) {
+			  		alert("please insert value RH");
+			  	} else {
+				    x = c.value * 9 / 5 + 32;
+					     if (x < 80) {
+				    		heatFormula.value = "T < 26.7 C";
+				    	} 	else heatFormula.value = Math.round(resultOfHeat(x,heat,rh));
+				    }
+			  }
+			   else {
+			   	if (!rh.value) {
+			  		alert("please insert value RH");
+			  	}else {
+			    	x = (f.value -32) * 5 / 9;
+				    	if (x < 26.7) {
+				    		heatFormula.value = "T < 80 F";
+				    	} else heatFormula.value = Math.round(resultOfHeat(x,heat,rh));
+			  		} 
+			    }
+			    
+			}
+
+			function resultOfHeat(calculate, heat, rh) {
+				heat = -42.379 +(2.04901523*calculate) + (10.14333127 * rh.value) - (0.22475541 * calculate * rh.value) - (6.83783*10**-3 * calculate **2 ) - (5.481717 *10**-2 * rh.value**2 ) + (1.22874 * 10 ** -3 * calculate**2 * rh.value) + (8.5282*10**-4*calculate*rh.value**2) - (1.99*10**-6 * calculate**2 *rh.value**2);
+				return heat;
+			}
+
+			//reset
+			function resetForm() {
+		    	document.getElementById("myForm").reset();
+			}
+
+   </SCRIPT>
+
+	</head>
+	<body>
+		<section class="container">
+			<header>
+				<h1>Search Weather</h1>
+				<input type="text" value="" name="location" id="location" placeholder="Example: London">
+				<button id="submit">Search</button>
+			</header>
+
+			<div class="wrapper">
+				<div id="outputData"></div>
+				<br>
+				<div id="chartContainer" style="height: 370px; width:100%;"></div>
+			</div>
+
+		</section>
+
+		<main class="container">
+			<section class="calculate">
+				<form id="myForm">
+					<p class="p"><input class="first" id="c" onkeypress="return isNumberKey(event)" placeholder="Degrees in Celsius"></p>
+					<p class="p"><input id="f" onkeypress="return isNumberKey(event)" placeholder="Degrees Fahrenheit"> </p>
+					<p class="rh"><input id="rh" onkeypress="return isNumberKey(event)" placeholder="Relative Humidity"> </p>
+					<p class="riadok"><input id="heatFormula" type="text" onkeypress="return isNumberKey(event)" placeholder="Heat Index Formula"> </p>
+				</form>
+				<button class="first" onclick="convert('C')" class="btn">CalculateC</button>
+
+				<button onclick="convert('F')" class="btn">CalculateF</button>
+
+				<button type="button" onclick="resetForm()" value="Reset" class="btn">Clear</button>
+
+				<button onclick="HeatIndex('C')" type="button" class="btn">Heat Index FormulacC</button>
+				<button onclick="HeatIndex('F')" type="button" class="last">Heat Index FormulacF</button>
+
+			</section>
+
+			<div class="cloud">
+				<p id="cloudText"></p>
+			</div>
+		</main>
+	</body>
+</html>
